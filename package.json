@@ -1,0 +1,17 @@
+{
+  "name": "gamza",
+  "version": "1.0.0",
+  "description": "따뜻하고 포슬포슬한 이웃 중고거래 플랫폼 - 감자마켓 🥔",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "marketplace",
+    "secondhand",
+    "supabase",
+    "vanilla-js"
+  ],
+  "author": "",
+  "license": "MIT"
+}

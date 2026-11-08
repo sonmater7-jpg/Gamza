@@ -1,0 +1,140 @@
+:root {
+  /* Gamza Warm Brown Theme */
+  --color-primary: #8B5A2B;
+  --color-primary-hover: #72471F;
+  --color-primary-light: #F4EBE1;
+  --color-accent: #E28743;
+  --color-accent-hover: #C97232;
+  --color-potato-yellow: #F5D061;
+  
+  /* Backgrounds */
+  --bg-main: #FAF7F2;
+  --bg-card: #FFFFFF;
+  --bg-surface: #F5EFEB;
+  --bg-hover: #EFE8E1;
+
+  /* Text Colors */
+  --text-main: #2D241E;
+  --text-sub: #7A6F66;
+  --text-muted: #A3978E;
+  --text-white: #FFFFFF;
+
+  /* Borders & Dividers */
+  --border-light: #E8DFD8;
+  --border-focus: #8B5A2B;
+
+  /* Status Colors */
+  --status-sale-text: #2E7D32;
+  --status-sale-bg: #E8F5E9;
+  --status-sale-border: #A5D6A7;
+
+  --status-reserved-text: #E65100;
+  --status-reserved-bg: #FFF3E0;
+  --status-reserved-border: #FFCC80;
+
+  --status-completed-text: #616161;
+  --status-completed-bg: #EEEEEE;
+  --status-completed-border: #E0E0E0;
+
+  /* Radius & Shadows */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-full: 9999px;
+
+  --shadow-sm: 0 2px 6px rgba(139, 90, 43, 0.06);
+  --shadow-md: 0 6px 16px rgba(139, 90, 43, 0.1);
+  --shadow-lg: 0 12px 30px rgba(139, 90, 43, 0.16);
+
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.25s ease;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard", "Noto Sans KR", Roboto, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  line-height: 1.5;
+}
+
+/* Status Badge common style */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  border: 1px solid transparent;
+  line-height: 1;
+}
+
+.status-badge.sale {
+  color: var(--status-sale-text);
+  background-color: var(--status-sale-bg);
+  border-color: var(--status-sale-border);
+}
+
+.status-badge.reserved {
+  color: var(--status-reserved-text);
+  background-color: var(--status-reserved-bg);
+  border-color: var(--status-reserved-border);
+}
+
+.status-badge.completed {
+  color: var(--status-completed-text);
+  background-color: var(--status-completed-bg);
+  border-color: var(--status-completed-border);
+}
+
+/* Button common tokens */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 18px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-decoration: none;
+}
+
+.btn-primary {
+  background-color: var(--color-primary);
+  color: var(--text-white);
+}
+.btn-primary:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.btn-outline {
+  background-color: transparent;
+  border: 1.5px solid var(--border-light);
+  color: var(--text-main);
+}
+.btn-outline:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  background-color: var(--color-primary-light);
+}
+
+.btn-accent {
+  background-color: var(--color-accent);
+  color: var(--text-white);
+}
+.btn-accent:hover {
+  background-color: var(--color-accent-hover);
+}

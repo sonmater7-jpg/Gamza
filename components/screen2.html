@@ -1,0 +1,148 @@
+<!-- 감자 중고거래 [화면 2: 상세 팝업(모달)] 컴포넌트 -->
+<div id="detailModal" class="gamza-modal-backdrop" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modalProductTitle">
+  <div class="gamza-modal-container" role="document">
+    <!-- 닫기 버튼 (X 아이콘) -->
+    <button type="button" class="modal-close-btn" id="modalCloseBtn" aria-label="상세 팝업 닫기">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+
+    <!-- 상단 50% 고화질 상품 이미지 영역 -->
+    <div class="modal-image-wrapper">
+      <img id="modalProductImage" src="" alt="상품 상세 이미지" class="modal-product-img" />
+      <div class="image-gradient-overlay"></div>
+    </div>
+
+    <!-- 내용 영역 (스크롤 가능) -->
+    <div class="modal-scroll-content">
+      <!-- 1. 판매 상태 뱃지 & 카테고리 태그 -->
+      <div class="modal-meta-top">
+        <span id="modalProductStatus" class="status-badge sale">판매중</span>
+        <span id="modalProductCategory" class="category-tag">디지털기기</span>
+      </div>
+
+      <!-- 2. 상품명 -->
+      <h2 id="modalProductTitle" class="modal-product-title">상품 제목이 들어갑니다</h2>
+
+      <!-- 3. 판매 위치 및 업로드 시간 -->
+      <div class="modal-meta-sub">
+        <span class="meta-icon" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+            <circle cx="12" cy="10" r="3"></circle>
+          </svg>
+        </span>
+        <span id="modalProductLocation">서초동</span>
+        <span class="meta-dot">·</span>
+        <span id="modalProductTimeAgo">방금 전</span>
+      </div>
+
+      <!-- 4. 가격 -->
+      <div class="modal-price-box">
+        <span id="modalProductPrice" class="modal-product-price">0원</span>
+      </div>
+
+      <div class="modal-divider"></div>
+
+      <!-- 5. 상품 설명 (줄바꿈 지원) -->
+      <div class="modal-section-title">상품 설명</div>
+      <p id="modalProductDescription" class="modal-product-description">
+        상품 상세 설명 내용이 여기에 표시됩니다.
+      </p>
+
+      <div class="modal-divider"></div>
+
+      <!-- 6. 판매자 정보 섹션 -->
+      <div class="modal-seller-section">
+        <div class="seller-card">
+          <div class="seller-main-info">
+            <img id="modalSellerImage" class="seller-avatar" src="" alt="판매자 프로필" />
+            <div class="seller-details">
+              <div class="seller-nickname-wrap">
+                <span id="modalSellerNickname" class="seller-nickname">판매자닉네임</span>
+                <span class="seller-badge">동네이웃</span>
+              </div>
+              <div class="seller-location-wrap">
+                <span id="modalSellerLocation" class="seller-location">서초동</span>
+                <span class="seller-trust">동네인증 완료</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 매너온도 박스 -->
+          <div class="seller-manner-box">
+            <div class="manner-temp-header">
+              <span class="manner-temp-label">매너온도</span>
+              <div class="manner-temp-value-group">
+                <span id="modalSellerMannerTemp" class="manner-temp-value">36.5°C</span>
+                <span id="modalSellerMannerEmoji" class="manner-temp-emoji">🥔</span>
+              </div>
+            </div>
+            <div class="manner-temp-bar-bg" title="매너온도">
+              <div id="modalSellerMannerBar" class="manner-temp-bar-fill" style="width: 36.5%;"></div>
+            </div>
+            <div class="manner-temp-desc">
+              <span id="modalSellerMannerDiff">첫 온도 36.5°C 기본 매너예요.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 판매자 본인 전용: 수정/삭제/상태변경 액션 바 (비로그인 또는 타인이면 hidden) -->
+    <div id="ownerActionBar" class="modal-owner-action-bar" style="display:none;">
+      <div class="owner-status-group">
+        <span class="owner-status-label">상태 변경</span>
+        <div class="owner-status-btns">
+          <button type="button" class="owner-status-btn" data-status="판매중">판매중</button>
+          <button type="button" class="owner-status-btn" data-status="예약중">예약중</button>
+          <button type="button" class="owner-status-btn" data-status="거래 완료">거래 완료</button>
+        </div>
+      </div>
+      <div class="owner-manage-btns">
+        <button type="button" id="modalEditBtn" class="owner-manage-btn owner-edit-btn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+          </svg>
+          수정
+        </button>
+        <button type="button" id="modalDeleteBtn" class="owner-manage-btn owner-delete-btn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="3 6 5 6 21 6"></polyline>
+            <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path>
+            <path d="M10 11v6M14 11v6"></path>
+          </svg>
+          삭제
+        </button>
+      </div>
+    </div>
+
+    <!-- 하단 고정/배치 액션 바 (타인·비로그인 전용) -->
+    <div id="visitorActionBar" class="modal-action-bar">
+      <!-- [관심 추가(찜)] 버튼 -->
+      <button type="button" id="modalLikeBtn" class="btn btn-outline modal-like-btn" aria-label="관심 추가">
+        <svg class="heart-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+        </svg>
+        <span id="modalLikeText" class="like-btn-text">관심 추가</span>
+      </button>
+
+      <!-- [채팅 시작하기] 버튼 -->
+      <button type="button" id="modalChatBtn" class="btn btn-primary modal-chat-btn">
+        <svg class="chat-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        </svg>
+        <span>채팅 시작하기</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- 감자 인터랙션 안내 토스트 -->
+<div id="gamzaToast" class="gamza-toast" aria-live="polite">
+  <span class="gamza-toast-icon">🥔</span>
+  <span id="gamzaToastText" class="gamza-toast-text">메시지가 표시됩니다.</span>
+</div>

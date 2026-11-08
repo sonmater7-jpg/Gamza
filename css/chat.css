@@ -1,0 +1,355 @@
+/* ==========================================================================
+   감자 중고거래 [1:1 감자톡 실시간 채팅 모달] 스타일 시트 (chat.css)
+   ========================================================================== */
+
+.gamza-chat-backdrop {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(45, 36, 30, 0.62);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+  padding: 20px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity var(--transition-normal), visibility var(--transition-normal);
+}
+
+.gamza-chat-backdrop.active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.gamza-chat-container {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+  height: 80vh;
+  max-height: 720px;
+  background-color: var(--bg-card);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 24px 48px rgba(74, 46, 20, 0.28);
+  border: 1px solid var(--border-light);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transform: scale(0.94) translateY(16px);
+  opacity: 0;
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+}
+
+.gamza-chat-backdrop.active .gamza-chat-container {
+  transform: scale(1) translateY(0);
+  opacity: 1;
+}
+
+/* 채팅 헤더 */
+.chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  background-color: var(--bg-surface);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.chat-seller-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.chat-seller-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-full);
+  object-fit: cover;
+  border: 1.5px solid var(--border-light);
+  background: #fff;
+}
+
+.chat-seller-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.chat-seller-name-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.chat-seller-name {
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.chat-seller-temp {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+.chat-seller-sub {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.chat-close-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  color: var(--text-muted);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.chat-close-btn:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  color: var(--text-main);
+}
+
+/* 상품 미니 배너 */
+.chat-product-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 18px;
+  background-color: #fff;
+  border-bottom: 1px solid var(--border-light);
+  flex-shrink: 0;
+}
+
+.chat-product-thumb {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.chat-product-details {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.chat-product-title-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.chat-product-title {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chat-product-price {
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: var(--color-primary);
+}
+
+/* 대화창 본문 */
+.chat-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background-color: var(--bg-main);
+}
+
+.chat-date-divider {
+  align-self: center;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  background-color: rgba(0, 0, 0, 0.06);
+  padding: 3px 12px;
+  border-radius: var(--radius-full);
+  margin: 4px 0 8px;
+}
+
+/* 말풍선 공통 및 행 */
+.chat-bubble-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  max-width: 82%;
+}
+
+.chat-bubble-row.my-row {
+  align-self: flex-end;
+  flex-direction: row;
+}
+
+.chat-bubble-row.seller-row {
+  align-self: flex-start;
+  flex-direction: row;
+}
+
+.chat-bubble-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  object-fit: cover;
+  align-self: flex-start;
+  margin-top: 2px;
+}
+
+.chat-bubble-content {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.chat-sender-name {
+  font-size: 0.76rem;
+  color: var(--text-sub);
+  font-weight: 600;
+  margin-left: 2px;
+}
+
+.chat-bubble {
+  padding: 9px 14px;
+  font-size: 0.92rem;
+  line-height: 1.45;
+  border-radius: 16px;
+  word-break: break-word;
+}
+
+.my-bubble {
+  background-color: var(--color-primary);
+  color: #fff;
+  border-bottom-right-radius: 3px;
+}
+
+.seller-bubble {
+  background-color: #ffffff;
+  color: var(--text-main);
+  border: 1px solid var(--border-light);
+  border-bottom-left-radius: 3px;
+}
+
+.chat-time {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-bottom: 2px;
+}
+
+/* 퀵 추천 칩 */
+.chat-quick-suggestions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background-color: #fff;
+  border-top: 1px solid var(--border-light);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.chat-quick-suggestions::-webkit-scrollbar {
+  display: none;
+}
+
+.quick-chip {
+  flex-shrink: 0;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-full);
+  padding: 5px 12px;
+  font-size: 0.8rem;
+  color: var(--text-sub);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--transition-fast);
+}
+
+.quick-chip:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  background-color: var(--color-primary-light);
+}
+
+/* 하단 입력 폼 */
+.chat-footer {
+  padding: 12px 16px;
+  background-color: #fff;
+  border-top: 1px solid var(--border-light);
+}
+
+.chat-input-form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.chat-input {
+  flex: 1;
+  background-color: var(--bg-surface);
+  border: 1.5px solid var(--border-light);
+  border-radius: var(--radius-full);
+  padding: 10px 16px;
+  font-size: 0.92rem;
+  outline: none;
+  transition: border-color var(--transition-fast);
+}
+
+.chat-input:focus {
+  border-color: var(--color-primary);
+  background-color: #fff;
+}
+
+.chat-send-btn {
+  background-color: var(--color-primary);
+  border: none;
+  color: #fff;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.chat-send-btn:hover {
+  background-color: var(--color-primary-hover);
+  transform: scale(1.05);
+}
+
+.chat-send-btn:active {
+  transform: scale(0.95);
+}
+
+@media (max-width: 480px) {
+  .gamza-chat-container {
+    height: 92vh;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  }
+}

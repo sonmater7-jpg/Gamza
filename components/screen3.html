@@ -1,0 +1,249 @@
+<!-- components/screen3.html: 감자 중고거래 [화면 3: 글쓰기 모달] -->
+<div id="writeModal" class="write-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="writeModalTitle">
+  <div class="write-modal-dialog">
+    <!-- 모달 헤더 -->
+    <header class="write-modal-header">
+      <div class="write-modal-title-wrap">
+        <span class="potato-badge">🥔 내 감자 팔기</span>
+        <h2 id="writeModalTitle" class="write-modal-title">내 감자 팔기 (글쓰기)</h2>
+      </div>
+      <button type="button" class="write-modal-close-btn" id="closeWriteModalBtn" aria-label="닫기">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </header>
+
+    <!-- 모달 본문 (스크롤 영역) -->
+    <div class="write-modal-body">
+      <form id="writeProductForm" class="write-form" novalidate>
+        
+        <!-- 1) 상품 이미지 -->
+        <div class="form-group">
+          <label class="form-label" for="productImage">
+            상품 이미지
+            <span class="label-subtext">내 PC에서 사진을 올리거나 URL을 입력할 수 있어요</span>
+          </label>
+
+          <!-- 이미지 미리보기 영역 -->
+          <div class="image-preview-wrapper" id="imagePreviewContainer">
+            <div class="image-preview-placeholder" id="previewPlaceholder">
+              <div class="placeholder-icon">📷</div>
+              <p class="placeholder-text">PC에서 사진을 선택하거나 이미지 URL을 입력하세요</p>
+              <span class="placeholder-sub">비워둘 경우 기본 포슬포슬 감자 이미지가 적용됩니다</span>
+            </div>
+            <img id="imagePreview" class="image-preview-img" src="" alt="상품 미리보기" style="display: none;" />
+            <button type="button" id="clearImageBtn" class="clear-image-btn" title="이미지 지우기" style="display: none;" aria-label="이미지 지우기">✕</button>
+          </div>
+
+          <!-- 파일 탐색기 선택 및 URL 입력 바 -->
+          <div class="image-upload-action-row">
+            <input type="file" id="productFileInput" accept="image/*" style="display:none;" />
+            <button type="button" id="browseImageBtn" class="btn btn-outline product-file-browse-btn">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="17 8 12 3 7 8"></polyline>
+                <line x1="12" y1="3" x2="12" y2="15"></line>
+              </svg>
+              <span>내 PC에서 사진 찾기</span>
+            </button>
+            <div class="input-with-action" style="flex:1;">
+              <input
+                type="url"
+                id="productImage"
+                name="imageUrl"
+                class="form-control"
+                placeholder="또는 이미지 링크(URL) 입력"
+                autocomplete="off"
+              />
+            </div>
+          </div>
+
+          <!-- 샘플 이미지 프리셋 선택 버튼 -->
+          <div class="preset-section">
+            <span class="preset-label">빠른 샘플 이미지:</span>
+            <div class="preset-btn-group" id="imagePresetGroup">
+              <button type="button" class="preset-chip" data-preset="potato" data-url="https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=800&q=80">
+                🥔 햇감자
+              </button>
+              <button type="button" class="preset-chip" data-preset="digital" data-url="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=800&q=80">
+                💻 전자기기
+              </button>
+              <button type="button" class="preset-chip" data-preset="furniture" data-url="https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=800&q=80">
+                🪑 원목가구
+              </button>
+              <button type="button" class="preset-chip" data-preset="clothing" data-url="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?auto=format&fit=crop&w=800&q=80">
+                👕 의류패션
+              </button>
+              <button type="button" class="preset-chip" data-preset="appliance" data-url="https://images.unsplash.com/photo-1517668808822-9ebb02f2a0e6?auto=format&fit=crop&w=800&q=80">
+                ☕ 생활가전
+              </button>
+              <button type="button" class="preset-chip" data-preset="books" data-url="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=800&q=80">
+                📚 도서티켓
+              </button>
+            </div>
+          </div>
+          <div class="field-error" id="imageError"></div>
+        </div>
+
+        <!-- 2) 상품명 -->
+        <div class="form-group">
+          <label class="form-label required" for="productTitle">
+            상품명
+          </label>
+          <input
+            type="text"
+            id="productTitle"
+            name="title"
+            class="form-control"
+            placeholder="상품명을 입력해주세요"
+            maxlength="60"
+            required
+            autocomplete="off"
+          />
+          <div class="field-error" id="titleError"></div>
+        </div>
+
+        <!-- 3) 카테고리 -->
+        <div class="form-group">
+          <label class="form-label required" for="productCategory">
+            카테고리
+          </label>
+          <div class="select-wrapper">
+            <select id="productCategory" name="category" class="form-control" required>
+              <option value="" disabled selected>카테고리를 선택해주세요</option>
+              <option value="디지털기기">디지털기기</option>
+              <option value="가구/인테리어">가구/인테리어</option>
+              <option value="의류">의류</option>
+              <option value="생활가전">생활가전</option>
+              <option value="도서/티켓">도서/티켓</option>
+              <option value="기타">기타</option>
+            </select>
+            <span class="select-arrow">▼</span>
+          </div>
+          <div class="field-error" id="categoryError"></div>
+        </div>
+
+        <!-- 4) 가격 -->
+        <div class="form-group">
+          <div class="label-with-addon">
+            <label class="form-label required" for="productPrice">
+              가격
+            </label>
+            <button type="button" class="text-addon-btn" id="setFreePriceBtn">🎁 나눔 (0원)</button>
+          </div>
+          <div class="input-prefix-wrapper">
+            <span class="input-prefix">₩</span>
+            <input
+              type="number"
+              id="productPrice"
+              name="price"
+              class="form-control with-prefix"
+              placeholder="₩ 가격을 입력해주세요 (원)"
+              min="0"
+              step="100"
+              required
+            />
+          </div>
+          <div class="field-error" id="priceError"></div>
+        </div>
+
+        <!-- 5) 거래 동네 -->
+        <div class="form-group">
+          <label class="form-label required" for="productLocation">
+            거래 동네
+          </label>
+          <input
+            type="text"
+            id="productLocation"
+            name="location"
+            class="form-control"
+            placeholder="예: 서초동, 역삼동"
+            maxlength="20"
+            required
+            autocomplete="off"
+          />
+          <div class="location-preset-group" id="locationPresetGroup">
+            <span class="preset-label">동네 빠른 선택:</span>
+            <div class="preset-tag-list">
+              <button type="button" class="preset-tag" data-location="서초동">서초동</button>
+              <button type="button" class="preset-tag" data-location="역삼동">역삼동</button>
+              <button type="button" class="preset-tag" data-location="방배동">방배동</button>
+              <button type="button" class="preset-tag" data-location="양재동">양재동</button>
+              <button type="button" class="preset-tag" data-location="반포동">반포동</button>
+            </div>
+          </div>
+          <div class="field-error" id="locationError"></div>
+        </div>
+
+        <!-- 6) 판매 상태 -->
+        <div class="form-group">
+          <label class="form-label required">
+            판매 상태
+          </label>
+          <div class="status-radio-group" role="radiogroup" aria-label="판매 상태 선택">
+            <label class="status-radio-label">
+              <input type="radio" name="status" value="판매중" class="status-radio-input" checked />
+              <span class="status-chip sale">
+                <span class="chip-dot"></span>
+                판매중
+              </span>
+            </label>
+            <label class="status-radio-label">
+              <input type="radio" name="status" value="예약중" class="status-radio-input" />
+              <span class="status-chip reserved">
+                <span class="chip-dot"></span>
+                예약중
+              </span>
+            </label>
+            <label class="status-radio-label">
+              <input type="radio" name="status" value="거래 완료" class="status-radio-input" />
+              <span class="status-chip completed">
+                <span class="chip-dot"></span>
+                거래 완료
+              </span>
+            </label>
+          </div>
+          <div class="field-error" id="statusError"></div>
+        </div>
+
+        <!-- 7) 자세한 설명 -->
+        <div class="form-group">
+          <div class="label-with-addon">
+            <label class="form-label required" for="productDescription">
+              자세한 설명
+            </label>
+            <span class="char-counter" id="descCharCounter">0 / 1000자</span>
+          </div>
+          <textarea
+            id="productDescription"
+            name="description"
+            class="form-control form-textarea"
+            rows="5"
+            placeholder="구입 시기, 사용감, 하자 여부 등 상품 설명을 자세히 적어주세요"
+            maxlength="1000"
+            required
+          ></textarea>
+          <div class="field-error" id="descriptionError"></div>
+        </div>
+
+        <!-- 맨 아래: [작성 완료] 버튼 -->
+        <div class="form-actions">
+          <button type="button" class="btn btn-outline cancel-btn" id="cancelWriteBtn">
+            닫기
+          </button>
+          <button type="submit" class="btn btn-primary submit-btn" id="submitProductBtn">
+            <span>🥔 감자 마켓에 작성 완료</span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- 모달 내 토스트 알림창 -->
+    <div id="writeModalToast" class="write-toast" role="alert" aria-live="assertive">
+      <span class="toast-icon">✨</span>
+      <span class="toast-message" id="writeToastMessage">새 상품이 등록되었습니다!</span>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>감자마켓 🥔 | 따뜻하고 포슬포슬한 이웃 중고거래</title>
+  
+  <!-- 파비콘 (감자 이모지 SVG) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🥔</text></svg>" />
+
+  <!-- 웹폰트: Pretendard GO CDN -->
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+
+  <!-- CSS 스타일시트 (공통 토큰 및 3개 화면, 채팅) -->
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/screen1.css" />
+  <link rel="stylesheet" href="css/screen2.css" />
+  <link rel="stylesheet" href="css/screen3.css" />
+  <link rel="stylesheet" href="css/chat.css" />
+
+  <style>
+    /* 통합 추가 보완 스타일 */
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .gamza-footer {
+      margin-top: auto;
+      background-color: var(--bg-surface);
+      border-top: 1px solid var(--border-light);
+      padding: 32px 20px;
+      color: var(--text-sub);
+      font-size: 0.85rem;
+      text-align: center;
+    }
+
+    .gamza-footer .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .footer-brand {
+      font-weight: 700;
+      color: var(--color-primary);
+      font-size: 1rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .footer-copy {
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================== -->
+  <!-- [화면 1] 상품 목록 영역 (헤더, 카테고리, 카드 그리드) -->
+  <!-- ============================================== -->
+  <div class="screen1-container">
+    <!-- 상단 고정 헤더 -->
+    <header class="gamza-header" id="mainHeader">
+      <div class="header-inner">
+        <!-- 서비스 로고 -->
+        <div class="header-logo">
+          <a href="#" class="logo-link" id="logoBtn" title="감자 홈으로 이동">
+            <span class="logo-text">감자</span>
+            <span class="logo-emoji" aria-hidden="true">🥔</span>
+          </a>
+        </div>
+
+        <!-- 검색창 -->
+        <div class="header-search">
+          <form class="search-form" id="searchForm" onsubmit="return false;">
+            <div class="search-input-wrapper">
+              <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <input 
+                type="text" 
+                id="searchInput" 
+                class="search-input" 
+                placeholder="물품명, 동네명 등을 검색해보세요" 
+                autocomplete="off" 
+                aria-label="상품 및 지역 검색"
+              />
+              <button type="button" id="searchClearBtn" class="search-clear-btn" aria-label="검색어 지우기" style="display: none;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+            <button type="submit" id="searchBtn" class="search-submit-btn" aria-label="검색 실행">검색</button>
+          </form>
+        </div>
+
+        <!-- 헤더 우측 액션 버튼들 -->
+        <div class="header-actions">
+          <!-- 수파베이스 DB 실시간 연동 뱃지 -->
+          <div class="db-badge" title="Supabase Cloud DB와 실시간 연결되어 있습니다." style="display: inline-flex; align-items: center; gap: 6px; font-size: 0.75rem; color: #047857; background: #ecfdf5; border: 1px solid #a7f3d0; padding: 6px 12px; border-radius: 9999px; font-weight: 600;">
+            <span style="width: 8px; height: 8px; border-radius: 50%; background: #10b981; display: inline-block; box-shadow: 0 0 0 2px #d1fae5;"></span>
+            <span>Supabase DB 연결됨</span>
+          </div>
+
+          <!-- 글쓰기 버튼 -->
+          <button type="button" id="writeBtn" class="btn btn-primary header-write-btn">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 20h9"></path>
+              <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+            </svg>
+            <span class="btn-text">글쓰기</span>
+          </button>
+
+          <!-- 로그인 전: [로그인] 버튼 -->
+          <button type="button" id="loginBtn" class="btn btn-outline header-login-btn">
+            <span>로그인</span>
+          </button>
+
+          <!-- 로그인 후: [닉네임 + 작은 프로필 사진] 버튼 (클릭 시 회원 정보 수정) -->
+          <button type="button" id="nicknameBtn" class="btn header-nickname-btn" style="display:none;" title="클릭하여 회원 정보 수정">
+            <img id="headerProfileImg" src="" alt="프로필" class="header-profile-avatar" style="display:none;" />
+            <span id="nicknameBtnText">감자유저</span>
+            <svg class="header-profile-edit-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 20h9"></path>
+              <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+            </svg>
+          </button>
+
+          <!-- 로그인 후: [로그아웃] 버튼 -->
+          <button type="button" id="logoutBtn" class="btn btn-outline-danger header-logout-btn" style="display:none;">
+            <span>로그아웃</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- 메인 본문 래퍼 -->
+    <div class="screen1-content-wrap">
+      <!-- 서브바: 카테고리 칩 목록 + 거래 가능 필터 -->
+      <section class="filter-bar" aria-label="카테고리 및 필터">
+        <div class="filter-bar-inner">
+          <!-- 스크롤 가능한 카테고리 가로 칩 -->
+          <nav class="category-nav" aria-label="카테고리 목록">
+            <div class="category-chips-wrapper" id="categoryChips">
+              <button type="button" class="category-chip active" data-category="전체">전체</button>
+              <button type="button" class="category-chip" data-category="디지털기기">디지털기기</button>
+              <button type="button" class="category-chip" data-category="가구/인테리어">가구/인테리어</button>
+              <button type="button" class="category-chip" data-category="의류">의류</button>
+              <button type="button" class="category-chip" data-category="생활가전">생활가전</button>
+              <button type="button" class="category-chip" data-category="도서/티켓">도서/티켓</button>
+              <button type="button" class="category-chip" data-category="기타">기타</button>
+            </div>
+          </nav>
+
+          <!-- '거래 가능만 보기' 토글 스위치 -->
+          <div class="filter-toggle-container">
+            <label class="toggle-switch-label" for="availableOnlyToggle">
+              <input type="checkbox" id="availableOnlyToggle" class="toggle-input" />
+              <span class="toggle-slider" aria-hidden="true"></span>
+              <span class="toggle-text">거래 가능만 보기</span>
+            </label>
+          </div>
+        </div>
+      </section>
+
+      <!-- 상품 목록 메인 컨테이너 -->
+      <main class="product-main-section">
+        <div class="product-section-header">
+          <h2 class="section-title" id="listTitle">오늘의 감자 마켓</h2>
+          <span class="product-count" id="productCount"></span>
+        </div>
+
+        <!-- 상품 카드 그리드 영역 -->
+        <div class="product-grid" id="productList" role="region" aria-label="상품 목록">
+          <!-- js/screen1.js 에서 동적으로 렌더링됩니다 -->
+        </div>
+
+        <!-- 검색/필터 결과 없을 때 빈 상태 안내 문구 -->
+        <div class="empty-state" id="emptyState" style="display: none;" role="status">
+          <div class="empty-state-icon" aria-hidden="true">🥔</div>
+          <h3 class="empty-state-title">검색된 상품이 없어요</h3>
+          <p class="empty-state-message">
+            다른 검색어를 입력하시거나<br />
+            필터 조건을 다시 확인해보세요.
+          </p>
+          <button type="button" class="btn btn-outline empty-reset-btn" id="emptyResetBtn">
+            필터 및 검색 초기화
+          </button>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- 푸터 -->
+  <footer class="gamza-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <span>감자마켓</span>
+        <span>🥔</span>
+      </div>
+      <p class="footer-desc">따뜻한 이웃과 만나는 포슬포슬 중고 직거래 웹 서비스</p>
+      <p class="footer-copy">© 2026 Gamza Market. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- ============================================== -->
+  <!-- [화면 2] 상세 팝업 (모달) 영역 -->
+  <!-- ============================================== -->
+  <div id="detailModal" class="gamza-modal-backdrop" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modalProductTitle">
+    <div class="gamza-modal-container" role="document">
+      <!-- 닫기 버튼 (X 아이콘) -->
+      <button type="button" class="modal-close-btn" id="modalCloseBtn" aria-label="상세 팝업 닫기">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+
+      <!-- 상단 50% 고화질 상품 이미지 영역 -->
+      <div class="modal-image-wrapper">
+        <img id="modalProductImage" src="" alt="상품 상세 이미지" class="modal-product-img" />
+        <div class="image-gradient-overlay"></div>
+      </div>
+
+      <!-- 내용 영역 (스크롤 가능) -->
+      <div class="modal-scroll-content">
+        <!-- 1. 판매 상태 뱃지 & 카테고리 태그 -->
+        <div class="modal-meta-top">
+          <span id="modalProductStatus" class="status-badge sale">판매중</span>
+          <span id="modalProductCategory" class="category-tag">디지털기기</span>
+        </div>
+
+        <!-- 2. 상품명 -->
+        <h2 id="modalProductTitle" class="modal-product-title">상품 제목이 들어갑니다</h2>
+
+        <!-- 3. 판매 위치 및 업로드 시간 -->
+        <div class="modal-meta-sub">
+          <span class="meta-icon" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+          </span>
+          <span id="modalProductLocation">서초동</span>
+          <span class="meta-dot">·</span>
+          <span id="modalProductTimeAgo">방금 전</span>
+        </div>
+
+        <!-- 4. 가격 -->
+        <div class="modal-price-box">
+          <span id="modalProductPrice" class="modal-product-price">0원</span>
+        </div>
+
+        <div class="modal-divider"></div>
+
+        <!-- 5. 상품 설명 (줄바꿈 지원) -->
+        <div class="modal-section-title">상품 설명</div>
+        <p id="modalProductDescription" class="modal-product-description">
+          상품 상세 설명 내용이 여기에 표시됩니다.
+        </p>
+
+        <div class="modal-divider"></div>
+
+        <!-- 6. 판매자 정보 섹션 -->
+        <div class="modal-seller-section">
+          <div class="seller-card">
+            <div class="seller-main-info">
+              <img id="modalSellerImage" class="seller-avatar" src="" alt="판매자 프로필" />
+              <div class="seller-details">
+                <div class="seller-nickname-wrap">
+                  <span id="modalSellerNickname" class="seller-nickname">판매자닉네임</span>
+                  <span class="seller-badge">동네이웃</span>
+                </div>
+                <div class="seller-location-wrap">
+                  <span id="modalSellerLocation" class="seller-location">서초동</span>
+                  <span class="seller-trust">동네인증 완료</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 매너온도 박스 -->
+            <div class="seller-manner-box">
+              <div class="manner-temp-header">
+                <span class="manner-temp-label">매너온도</span>
+                <div class="manner-temp-value-group">
+                  <span id="modalSellerMannerTemp" class="manner-temp-value">36.5°C</span>
+                  <span id="modalSellerMannerEmoji" class="manner-temp-emoji">🥔</span>
+                </div>
+              </div>
+              <div class="manner-temp-bar-bg" title="매너온도">
+                <div id="modalSellerMannerBar" class="manner-temp-bar-fill" style="width: 36.5%;"></div>
+              </div>
+              <div class="manner-temp-desc">
+                <span id="modalSellerMannerDiff">첫 온도 36.5°C 기본 매너예요.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 판매자 본인 전용: 수정/삭제/상태변경 액션 바 (타인 또는 비로그인이면 hidden) -->
+      <div id="ownerActionBar" class="modal-owner-action-bar" style="display:none;">
+        <div class="owner-status-group">
+          <span class="owner-status-label">상태 변경</span>
+          <div class="owner-status-btns">
+            <button type="button" class="owner-status-btn" data-status="판매중">판매중</button>
+            <button type="button" class="owner-status-btn" data-status="예약중">예약중</button>
+            <button type="button" class="owner-status-btn" data-status="거래 완료">거래 완료</button>
+          </div>
+        </div>
+        <div class="owner-manage-btns">
+          <button type="button" id="modalEditBtn" class="owner-manage-btn owner-edit-btn">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </svg>
+            수정
+          </button>
+          <button type="button" id="modalDeleteBtn" class="owner-manage-btn owner-delete-btn">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path>
+              <path d="M10 11v6M14 11v6"></path>
+            </svg>
+            삭제
+          </button>
+        </div>
+      </div>
+
+      <!-- 하단 고정/배치 액션 바 (타인·비로그인 전용) -->
+      <div id="visitorActionBar" class="modal-action-bar">
+        <!-- [관심 추가(찜)] 버튼 -->
+        <button type="button" id="modalLikeBtn" class="btn btn-outline modal-like-btn" aria-label="관심 추가">
+          <svg class="heart-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+          </svg>
+          <span id="modalLikeText" class="like-btn-text">관심 추가</span>
+        </button>
+
+        <!-- [채팅 시작하기] 버튼 -->
+        <button type="button" id="modalChatBtn" class="btn btn-primary modal-chat-btn">
+          <svg class="chat-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+          </svg>
+          <span>채팅 시작하기</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- [회원정보] 내 프로필 / 회원 정보 수정 모달 -->
+  <!-- ============================================== -->
+  <div id="profileEditModal" class="auth-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="profileEditModalTitle">
+    <div class="auth-modal-dialog" style="max-width: 440px;">
+      <!-- 닫기 버튼 -->
+      <button type="button" class="auth-modal-close" id="profileEditCloseBtn" aria-label="닫기">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+
+      <!-- 모달 타이틀 -->
+      <div class="auth-modal-logo">
+        <span class="auth-logo-emoji">🥔</span>
+        <span id="profileEditModalTitle" class="auth-logo-text">회원 정보 수정</span>
+      </div>
+      <p class="auth-modal-sub">닉네임과 프로필 사진, 거래 동네를 변경할 수 있어요</p>
+
+      <form id="profileEditForm" onsubmit="return false;" style="display:flex; flex-direction:column; gap:16px;">
+        <!-- 프로필 사진 영역 -->
+        <div class="auth-field-group">
+          <label class="auth-label">프로필 사진</label>
+          <div class="auth-avatar-row">
+            <div class="auth-avatar-preview-wrap" style="width:72px; height:72px;">
+              <img id="profileEditAvatarPreview" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80" alt="내 프로필" class="auth-avatar-img" />
+            </div>
+            <div class="auth-avatar-actions">
+              <input type="file" id="profileEditFileInput" accept="image/*" style="display:none;" />
+              <button type="button" id="profileEditBrowseBtn" class="btn btn-outline auth-file-select-btn">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                  <circle cx="12" cy="13" r="4"></circle>
+                </svg>
+                내 사진 찾기
+              </button>
+              <button type="button" id="profileEditClearAvatarBtn" class="auth-avatar-clear-btn">기본 이미지로 변경</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 이메일 (읽기 전용) -->
+        <div class="auth-field-group">
+          <label class="auth-label" for="profileEditEmail">이메일 계정</label>
+          <input type="email" id="profileEditEmail" class="auth-input" readonly disabled style="background:#f3f4f6; color:#6b7280; cursor:not-allowed;" />
+        </div>
+
+        <!-- 닉네임 -->
+        <div class="auth-field-group">
+          <label class="auth-label" for="profileEditNickname">닉네임 <span class="auth-required">*</span></label>
+          <input type="text" id="profileEditNickname" class="auth-input" placeholder="이웃에게 표시될 닉네임 (2자 이상)" maxlength="20" required />
+        </div>
+
+        <!-- 거래 동네 -->
+        <div class="auth-field-group">
+          <label class="auth-label" for="profileEditLocation">주 거래 동네</label>
+          <input type="text" id="profileEditLocation" class="auth-input" placeholder="예: 서초동, 방배동, 역삼동" maxlength="30" />
+        </div>
+
+        <p class="auth-error" id="profileEditError"></p>
+
+        <!-- 저장 / 취소 버튼 -->
+        <div style="display:flex; gap:10px; margin-top:4px;">
+          <button type="button" id="profileEditCancelBtn" class="btn btn-outline" style="flex:1;">취소</button>
+          <button type="submit" id="profileEditSubmitBtn" class="btn btn-primary" style="flex:2;">🥔 수정사항 저장</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 감자 인터랙션 안내 토스트 (상세 모달용) -->
+  <div id="gamzaToast" class="gamza-toast" aria-live="polite">
+    <span class="gamza-toast-icon">🥔</span>
+    <span id="gamzaToastText" class="gamza-toast-text">메시지가 표시됩니다.</span>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- [인증] 로그인 / 회원가입 모달 -->
+  <!-- ============================================== -->
+  <div id="authModal" class="auth-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="authModalTitle">
+    <div class="auth-modal-dialog">
+      <!-- 닫기 버튼 -->
+      <button type="button" class="auth-modal-close" id="authModalClose" aria-label="닫기">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+
+      <!-- 로고 & 헤드라인 -->
+      <div class="auth-modal-logo">
+        <span class="auth-logo-emoji">🥔</span>
+        <span id="authModalTitle" class="auth-logo-text">감자마켓</span>
+      </div>
+      <p class="auth-modal-sub">따뜻하고 포슬포슬한 이웃 중고거래</p>
+
+      <!-- 탭 버튼 -->
+      <div class="auth-tabs" role="tablist">
+        <button type="button" id="tabLogin"  class="auth-tab active" role="tab">로그인</button>
+        <button type="button" id="tabSignup" class="auth-tab"        role="tab">회원가입</button>
+      </div>
+
+      <!-- ── 로그인 섹션 ── -->
+      <div id="authLoginSection" class="auth-section" style="display:flex; flex-direction:column; gap:14px;">
+        <div class="auth-field-group">
+          <label class="auth-label" for="authEmail">이메일</label>
+          <input type="email" id="authEmail" class="auth-input" placeholder="example@email.com" autocomplete="email" />
+        </div>
+        <div class="auth-field-group">
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+            <label class="auth-label" for="authPassword">비밀번호</label>
+            <a href="#" id="goForgotLink" class="auth-forgot-link" style="font-size:0.78rem; color:var(--text-muted); text-decoration:none;">비밀번호를 잊으셨나요?</a>
+          </div>
+          <input type="password" id="authPassword" class="auth-input" placeholder="비밀번호를 입력해주세요" autocomplete="current-password" />
+        </div>
+        <p class="auth-error" id="authLoginError"></p>
+        <button type="button" id="authLoginSubmitBtn" class="btn btn-primary auth-submit-btn">로그인</button>
+        <p class="auth-switch-text">
+          아직 계정이 없으신가요?
+          <a href="#" id="goSignupLink" class="auth-switch-link">회원가입 하러가기</a>
+        </p>
+      </div>
+
+      <!-- ── 회원가입 섹션 ── -->
+      <div id="authSignupSection" class="auth-section" style="display:none; flex-direction:column; gap:14px;">
+        <!-- 프로필 사진 업로드 -->
+        <div class="auth-field-group auth-avatar-upload-group">
+          <label class="auth-label">프로필 사진 <span class="label-subtext" style="font-size:0.75rem; color:var(--text-muted);">(선택)</span></label>
+          <div class="auth-avatar-row">
+            <div class="auth-avatar-preview-wrap">
+              <img id="authSignupAvatarPreview" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80" alt="프로필 미리보기" class="auth-avatar-img" />
+            </div>
+            <div class="auth-avatar-actions">
+              <input type="file" id="authSignupProfileFile" accept="image/*" style="display:none;" />
+              <button type="button" id="authSignupProfileBtn" class="btn btn-outline auth-file-select-btn">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                  <circle cx="12" cy="13" r="4"></circle>
+                </svg>
+                내 사진 찾기
+              </button>
+              <button type="button" id="authSignupProfileClearBtn" class="auth-avatar-clear-btn" style="display:none;">기본으로 변경</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="auth-field-group">
+          <label class="auth-label" for="authSignupEmail">이메일 <span class="auth-required">*</span></label>
+          <input type="email" id="authSignupEmail" class="auth-input" placeholder="example@email.com" autocomplete="email" />
+        </div>
+        <div class="auth-field-group">
+          <label class="auth-label" for="authSignupPassword">비밀번호 <span class="auth-required">*</span></label>
+          <input type="password" id="authSignupPassword" class="auth-input" placeholder="6자 이상 입력해주세요" autocomplete="new-password" />
+        </div>
+        <div class="auth-field-group">
+          <label class="auth-label" for="authSignupNickname">닉네임 <span class="auth-required">*</span></label>
+          <input type="text" id="authSignupNickname" class="auth-input" placeholder="이웃에게 표시될 닉네임 (2자 이상)" maxlength="20" autocomplete="off" />
+        </div>
+        <p class="auth-error" id="authSignupError"></p>
+        <button type="button" id="authSignupSubmitBtn" class="btn btn-primary auth-submit-btn">회원가입</button>
+        <p class="auth-switch-text">
+          이미 계정이 있으신가요?
+          <a href="#" id="goLoginLink" class="auth-switch-link">로그인 하러가기</a>
+        </p>
+      </div>
+
+      <!-- ── 비밀번호 찾기 섹션 ── -->
+      <div id="authForgotSection" class="auth-section" style="display:none; flex-direction:column; gap:14px;">
+        <div style="background-color: var(--bg-surface); padding: 12px 14px; border-radius: 10px; font-size: 0.84rem; color: var(--text-sub); line-height: 1.5; border: 1px solid var(--border-light);">
+          💡 가입하신 이메일 주소를 입력하시면 비밀번호를 안전하게 재설정할 수 있는 링크를 보내드립니다.
+        </div>
+        <div class="auth-field-group">
+          <label class="auth-label" for="authForgotEmail">가입 이메일</label>
+          <input type="email" id="authForgotEmail" class="auth-input" placeholder="example@email.com" autocomplete="email" />
+        </div>
+        <p class="auth-error" id="authForgotError"></p>
+        <div id="authForgotSuccess" class="auth-success-box" style="display:none; background:#ecfdf5; border:1px solid #a7f3d0; color:#047857; padding:10px 14px; border-radius:10px; font-size:0.85rem; line-height:1.45;">
+          ✅ 비밀번호 재설정 안내가 전송되었습니다. 이메일 수신함을 확인해주세요!
+        </div>
+        <button type="button" id="authForgotSubmitBtn" class="btn btn-primary auth-submit-btn">재설정 링크 보내기</button>
+        <p class="auth-switch-text">
+          비밀번호가 기억나셨나요?
+          <a href="#" id="forgotBackToLoginLink" class="auth-switch-link">로그인으로 돌아가기</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- [회원정보] 내 프로필 / 회원 정보 수정 모달 -->
+  <!-- ============================================== -->
+  <div id="profileEditModal" class="auth-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="profileEditModalTitle">
+    <div class="auth-modal-dialog" style="max-width: 440px;">
+      <!-- 닫기 버튼 -->
+      <button type="button" class="auth-modal-close" id="profileEditCloseBtn" aria-label="닫기">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+
+      <!-- 모달 타이틀 -->
+      <div class="auth-modal-logo">
+        <span class="auth-logo-emoji">🥔</span>
+        <span id="profileEditModalTitle" class="auth-logo-text">회원 정보 수정</span>
+      </div>
+      <p class="auth-modal-sub">닉네임과 프로필 사진, 거래 동네를 변경할 수 있어요</p>
+
+      <form id="profileEditForm" onsubmit="return false;" style="display:flex; flex-direction:column; gap:16px;">
+        <!-- 프로필 사진 영역 -->
+        <div class="auth-field-group">
+          <label class="auth-label">프로필 사진</label>
+          <div class="auth-avatar-row">
+            <div class="auth-avatar-preview-wrap" style="width:72px; height:72px;">
+              <img id="profileEditAvatarPreview" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80" alt="내 프로필" class="auth-avatar-img" />
+            </div>
+            <div class="auth-avatar-actions">
+              <input type="file" id="profileEditFileInput" accept="image/*" style="display:none;" />
+              <button type="button" id="profileEditBrowseBtn" class="btn btn-outline auth-file-select-btn">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                  <circle cx="12" cy="13" r="4"></circle>
+                </svg>
+                내 사진 찾기
+              </button>
+              <button type="button" id="profileEditClearAvatarBtn" class="auth-avatar-clear-btn">기본 이미지로 변경</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 이메일 (읽기 전용) -->
+        <div class="auth-field-group">
+          <label class="auth-label" for="profileEditEmail">이메일 계정</label>
+          <input type="email" id="profileEditEmail" class="auth-input" readonly disabled style="background:#f3f4f6; color:#6b7280; cursor:not-allowed;" />
+        </div>
+
+        <!-- 닉네임 -->
+        <div class="auth-field-group">
+          <label class="auth-label" for="profileEditNickname">닉네임 <span class="auth-required">*</span></label>
+          <input type="text" id="profileEditNickname" class="auth-input" placeholder="이웃에게 표시될 닉네임 (2자 이상)" maxlength="20" required />
+        </div>
+
+        <!-- 거래 동네 -->
+        <div class="auth-field-group">
+          <label class="auth-label" for="profileEditLocation">주 거래 동네</label>
+          <input type="text" id="profileEditLocation" class="auth-input" placeholder="예: 서초동, 방배동, 역삼동" maxlength="30" />
+        </div>
+
+        <p class="auth-error" id="profileEditError"></p>
+
+        <!-- 저장 / 취소 버튼 -->
+        <div style="display:flex; gap:10px; margin-top:4px;">
+          <button type="button" id="profileEditCancelBtn" class="btn btn-outline" style="flex:1;">취소</button>
+          <button type="submit" id="profileEditSubmitBtn" class="btn btn-primary" style="flex:2;">🥔 수정사항 저장</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- [화면 3] 글쓰기 모달 영역 -->
+  <!-- ============================================== -->
+  <div id="writeModal" class="write-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="writeModalTitle">
+    <div class="write-modal-dialog">
+      <!-- 모달 헤더 -->
+      <header class="write-modal-header">
+        <div class="write-modal-title-wrap">
+          <span class="potato-badge">🥔 내 감자 팔기</span>
+          <h2 id="writeModalTitle" class="write-modal-title">내 감자 팔기 (글쓰기)</h2>
+        </div>
+        <button type="button" class="write-modal-close-btn" id="closeWriteModalBtn" aria-label="닫기">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </header>
+
+      <!-- 모달 본문 (스크롤 영역) -->
+      <div class="write-modal-body">
+        <form id="writeProductForm" class="write-form" novalidate>
+          
+          <!-- 1) 상품 이미지 -->
+          <div class="form-group">
+            <label class="form-label" for="productImage">
+              상품 이미지
+              <span class="label-subtext">내 PC에서 사진을 올리거나 URL을 입력할 수 있어요</span>
+            </label>
+
+            <!-- 이미지 미리보기 영역 -->
+            <div class="image-preview-wrapper" id="imagePreviewContainer">
+              <div class="image-preview-placeholder" id="previewPlaceholder">
+                <div class="placeholder-icon">📷</div>
+                <p class="placeholder-text">PC에서 사진을 선택하거나 이미지 URL을 입력하세요</p>
+                <span class="placeholder-sub">비워둘 경우 기본 포슬포슬 감자 이미지가 적용됩니다</span>
+              </div>
+              <img id="imagePreview" class="image-preview-img" src="" alt="상품 미리보기" style="display: none;" />
+              <button type="button" id="clearImageBtn" class="clear-image-btn" title="이미지 지우기" style="display: none;" aria-label="이미지 지우기">✕</button>
+            </div>
+
+            <!-- 파일 탐색기 선택 및 URL 입력 바 -->
+            <div class="image-upload-action-row">
+              <input type="file" id="productFileInput" accept="image/*" style="display:none;" />
+              <button type="button" id="browseImageBtn" class="btn btn-outline product-file-browse-btn">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="17 8 12 3 7 8"></polyline>
+                  <line x1="12" y1="3" x2="12" y2="15"></line>
+                </svg>
+                <span>내 PC에서 사진 찾기</span>
+              </button>
+              <div class="input-with-action" style="flex:1;">
+                <input
+                  type="url"
+                  id="productImage"
+                  name="imageUrl"
+                  class="form-control"
+                  placeholder="또는 이미지 링크(URL) 입력"
+                  autocomplete="off"
+                />
+              </div>
+            </div>
+
+            <!-- 샘플 이미지 프리셋 선택 버튼 -->
+            <div class="preset-section">
+              <span class="preset-label">빠른 샘플 이미지:</span>
+              <div class="preset-btn-group" id="imagePresetGroup">
+                <button type="button" class="preset-chip" data-preset="potato" data-url="https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=800&q=80">
+                  🥔 햇감자
+                </button>
+                <button type="button" class="preset-chip" data-preset="digital" data-url="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=800&q=80">
+                  💻 전자기기
+                </button>
+                <button type="button" class="preset-chip" data-preset="furniture" data-url="https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=800&q=80">
+                  🪑 원목가구
+                </button>
+                <button type="button" class="preset-chip" data-preset="clothing" data-url="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?auto=format&fit=crop&w=800&q=80">
+                  👕 의류패션
+                </button>
+                <button type="button" class="preset-chip" data-preset="appliance" data-url="https://images.unsplash.com/photo-1517668808822-9ebb02f2a0e6?auto=format&fit=crop&w=800&q=80">
+                  ☕ 생활가전
+                </button>
+                <button type="button" class="preset-chip" data-preset="books" data-url="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=800&q=80">
+                  📚 도서티켓
+                </button>
+              </div>
+            </div>
+            <div class="field-error" id="imageError"></div>
+          </div>
+
+          <!-- 2) 상품명 -->
+          <div class="form-group">
+            <label class="form-label required" for="productTitle">
+              상품명
+            </label>
+            <input
+              type="text"
+              id="productTitle"
+              name="title"
+              class="form-control"
+              placeholder="상품명을 입력해주세요"
+              maxlength="60"
+              required
+              autocomplete="off"
+            />
+            <div class="field-error" id="titleError"></div>
+          </div>
+
+          <!-- 3) 카테고리 -->
+          <div class="form-group">
+            <label class="form-label required" for="productCategory">
+              카테고리
+            </label>
+            <div class="select-wrapper">
+              <select id="productCategory" name="category" class="form-control form-select" required>
+                <option value="" disabled selected>카테고리를 선택해주세요</option>
+                <option value="디지털기기">디지털기기</option>
+                <option value="가구/인테리어">가구/인테리어</option>
+                <option value="의류">의류</option>
+                <option value="생활가전">생활가전</option>
+                <option value="도서/티켓">도서/티켓</option>
+                <option value="기타">기타</option>
+              </select>
+            </div>
+            <div class="field-error" id="categoryError"></div>
+          </div>
+
+          <!-- 4) 가격 -->
+          <div class="form-group">
+            <label class="form-label required" for="productPrice">
+              가격
+            </label>
+            <div class="input-with-currency">
+              <span class="currency-prefix">₩</span>
+              <input
+                type="number"
+                id="productPrice"
+                name="price"
+                class="form-control price-input"
+                placeholder="가격을 입력해주세요 (숫자만)"
+                min="0"
+                step="100"
+                required
+              />
+              <button type="button" class="price-free-btn" id="setFreePriceBtn">나눔 🎁</button>
+            </div>
+            <div class="field-error" id="priceError"></div>
+          </div>
+
+          <!-- 5) 거래 동네 -->
+          <div class="form-group">
+            <label class="form-label required" for="productLocation">
+              거래 동네
+            </label>
+            <input
+              type="text"
+              id="productLocation"
+              name="location"
+              class="form-control"
+              placeholder="예: 서초동, 역삼동, 방배동"
+              maxlength="30"
+              required
+              autocomplete="off"
+            />
+            <div class="preset-tags" id="locationPresetTags">
+              <span class="preset-tag" data-loc="서초동">#서초동</span>
+              <span class="preset-tag" data-loc="역삼동">#역삼동</span>
+              <span class="preset-tag" data-loc="방배동">#방배동</span>
+              <span class="preset-tag" data-loc="양재동">#양재동</span>
+              <span class="preset-tag" data-loc="반포동">#반포동</span>
+            </div>
+            <div class="field-error" id="locationError"></div>
+          </div>
+
+          <!-- 6) 판매 상태 -->
+          <div class="form-group">
+            <label class="form-label required">
+              판매 상태
+            </label>
+            <div class="status-radio-group" role="radiogroup" aria-label="판매 상태 선택">
+              <label class="status-radio-label">
+                <input type="radio" name="status" value="판매중" checked class="status-radio-input" />
+                <span class="status-radio-btn status-btn-sale">
+                  <span class="radio-dot"></span>
+                  판매중
+                </span>
+              </label>
+
+              <label class="status-radio-label">
+                <input type="radio" name="status" value="예약중" class="status-radio-input" />
+                <span class="status-radio-btn status-btn-reserved">
+                  <span class="radio-dot"></span>
+                  예약중
+                </span>
+              </label>
+
+              <label class="status-radio-label">
+                <input type="radio" name="status" value="거래 완료" class="status-radio-input" />
+                <span class="status-radio-btn status-btn-completed">
+                  <span class="radio-dot"></span>
+                  거래 완료
+                </span>
+              </label>
+            </div>
+            <div class="field-error" id="statusError"></div>
+          </div>
+
+          <!-- 7) 자세한 설명 -->
+          <div class="form-group">
+            <div class="label-with-counter">
+              <label class="form-label required" for="productDescription">
+                자세한 설명
+              </label>
+              <span class="char-counter" id="descCharCounter">0 / 1000</span>
+            </div>
+            <textarea
+              id="productDescription"
+              name="description"
+              class="form-control form-textarea"
+              rows="5"
+              placeholder="구입 시기, 사용감, 하자 여부 등 상품 설명을 자세히 적어주세요. 신뢰할 수 있는 거래를 위해 솔직하게 작성해주세요."
+              maxlength="1000"
+              required
+            ></textarea>
+            <div class="field-error" id="descriptionError"></div>
+          </div>
+
+        </form>
+      </div>
+
+      <!-- 모달 푸터 (작성 완료 버튼) -->
+      <footer class="write-modal-footer">
+        <button type="button" class="btn btn-outline" id="cancelWriteBtn">취소</button>
+        <button type="submit" form="writeProductForm" class="btn btn-primary submit-product-btn" id="submitProductBtn">
+          <span>🥔 감자 마켓에 작성 완료</span>
+        </button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- 글쓰기용 안내 토스트 -->
+  <div id="writeModalToast" class="write-toast" role="status" aria-live="polite">
+    <span class="write-toast-icon">🥔</span>
+    <span class="write-toast-message" id="writeToastMessage"></span>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- [채팅] 1:1 감자톡 실시간 대화 모달 -->
+  <!-- ============================================== -->
+  <div id="chatModal" class="gamza-chat-backdrop" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="chatSellerNickname">
+    <div class="gamza-chat-container" role="document">
+      <!-- 채팅 헤더 (상대방 프로필 정보 & 닫기) -->
+      <header class="chat-header">
+        <div class="chat-seller-info">
+          <img id="chatSellerAvatar" src="" alt="판매자 프로필" class="chat-seller-avatar" />
+          <div class="chat-seller-text">
+            <div class="chat-seller-name-row">
+              <span id="chatSellerNickname" class="chat-seller-name">판매자</span>
+              <span id="chatSellerTemp" class="chat-seller-temp">36.5°C 🥔</span>
+            </div>
+            <span id="chatSellerLocation" class="chat-seller-sub">서초동 · 보통 30분 내 응답</span>
+          </div>
+        </div>
+        <button type="button" class="chat-close-btn" id="chatCloseBtn" aria-label="채팅창 닫기">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </header>
+
+      <!-- 상품 요약 미니 배너 -->
+      <div class="chat-product-banner">
+        <img id="chatProductThumb" src="" alt="상품 썸네일" class="chat-product-thumb" />
+        <div class="chat-product-details">
+          <div class="chat-product-title-row">
+            <span id="chatProductStatus" class="status-badge sale">판매중</span>
+            <span id="chatProductTitle" class="chat-product-title">상품 제목</span>
+          </div>
+          <span id="chatProductPrice" class="chat-product-price">0원</span>
+        </div>
+      </div>
+
+      <!-- 채팅 대화 메시지 영역 -->
+      <div class="chat-body" id="chatMessages">
+        <!-- 메시지들이 자바스크립트로 동적 렌더링됩니다 -->
+      </div>
+
+      <!-- 추천 퀵 메시지 칩 -->
+      <div class="chat-quick-suggestions">
+        <button type="button" class="quick-chip" data-msg="안녕하세요! 아직 구매 가능한가요? 🥔">아직 구매 가능한가요?</button>
+        <button type="button" class="quick-chip" data-msg="직거래 희망하는데 위치 어디가 좋으신가요? 📍">직거래 위치 문의</button>
+        <button type="button" class="quick-chip" data-msg="혹시 가격 네고가 조금 가능할까요? 💰">네고 문의</button>
+      </div>
+
+      <!-- 채팅 하단 입력창 -->
+      <footer class="chat-footer">
+        <form id="chatForm" class="chat-input-form" onsubmit="return false;">
+          <input 
+            type="text" 
+            id="chatInput" 
+            class="chat-input" 
+            placeholder="메시지를 입력하세요..." 
+            autocomplete="off" 
+          />
+          <button type="submit" id="chatSendBtn" class="chat-send-btn" aria-label="메시지 전송">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+          </button>
+        </form>
+      </footer>
+    </div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- 스크립트 로드 순서: Supabase SDK -> SupabaseClient -> Auth -> Store -> Modals -> Chat -> List Screen -->
+  <!-- ============================================== -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabaseClient.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/chat.js"></script>
+  <script src="js/screen2.js"></script>
+  <script src="js/screen3.js"></script>
+  <script src="js/screen1.js"></script>
+</body>
+</html>
